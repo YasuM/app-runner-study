@@ -22,6 +22,10 @@ type TaskEntity struct {
 	CreatedAt string
 }
 
+type TaskForm struct {
+	Name string `form:"task" binding:"required"`
+}
+
 func (t *task) taskList(ctx *gin.Context) {
 	ctx2, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -42,6 +46,26 @@ func (t *task) taskList(ctx *gin.Context) {
 		"title":    "Task",
 		"taskList": taskList,
 	})
+}
+
+func (t *task) taskInput(ctx *gin.Context) {
+	ctx.HTML(http.StatusOK, "input.tmpl", gin.H{
+		"title": "Task Input",
+	})
+}
+
+func (t *task) taskCreate(ctx *gin.Context) {
+	var form TaskForm
+	if err := ctx.ShouldBind(&form); err != nil {
+		ctx.HTML(http.StatusOK, "input.tmpl", gin.H{
+			"title": "Task Input",
+			"error": err.Error(),
+		})
+		return
+	}
+	t.db.Exec(`insert into task (name, created_at) values (?, now())`, form.Name)
+
+	ctx.Redirect(http.StatusMovedPermanently, "/task")
 }
 
 func main() {
@@ -66,5 +90,7 @@ func main() {
 		db: db,
 	}
 	r.GET("/task", t.taskList)
+	r.GET("/input", t.taskInput)
+	r.POST("/create", t.taskCreate)
 	r.Run()
 }
