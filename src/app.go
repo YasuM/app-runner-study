@@ -13,6 +13,37 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type task struct {
+	db *sql.DB
+}
+
+type TaskEntity struct {
+	Name      string
+	CreatedAt string
+}
+
+func (t *task) taskList(ctx *gin.Context) {
+	ctx2, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	row, err := t.db.QueryContext(ctx2, `select name, created_at from task`)
+	if err != nil {
+		panic(err)
+	}
+	var taskEntity TaskEntity
+	taskList := []TaskEntity{}
+	a := []TaskEntity{}
+	fmt.Println(a)
+	for row.Next() {
+		row.Scan(&taskEntity.Name, &taskEntity.CreatedAt)
+		taskList = append(taskList, taskEntity)
+	}
+
+	ctx.HTML(http.StatusOK, "index.tmpl", gin.H{
+		"title":    "Task",
+		"taskList": taskList,
+	})
+}
+
 func main() {
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/*")
@@ -21,31 +52,19 @@ func main() {
 			"message": "ok",
 		})
 	})
-	r.GET("/task", func(ctx *gin.Context) {
-		mysqlUser := os.Getenv("MYSQL_USER")
-		mysqlPassword := os.Getenv("MYSQL_PASSWORD")
-		mysqlHost := os.Getenv("MYSQL_HOST")
-		dsn := fmt.Sprintf("%s:%s@(%s:3306)/information_schema", mysqlUser, mysqlPassword, mysqlHost)
+	mysqlUser := os.Getenv("MYSQL_USER")
+	mysqlPassword := os.Getenv("MYSQL_PASSWORD")
+	mysqlHost := os.Getenv("MYSQL_HOST")
+	dsn := fmt.Sprintf("%s:%s@(%s:3306)/task", mysqlUser, mysqlPassword, mysqlHost)
 
-		db, err := sql.Open("mysql", dsn)
-		if err != nil {
-			panic(err)
-		}
-		defer db.Close()
-		ctx2, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-		row, err := db.QueryContext(ctx2, `select table_name from tables`)
-		if err != nil {
-			panic(err)
-		}
-		row.Next()
-		var a string
-		row.Scan(&a)
-
-		ctx.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"title": "Title",
-			"count": a,
-		})
-	})
+	db, err := sql.Open("mysql", dsn)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	t := &task{
+		db: db,
+	}
+	r.GET("/task", t.taskList)
 	r.Run()
 }

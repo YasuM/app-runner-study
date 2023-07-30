@@ -1,13 +1,15 @@
-<html>
+<html lang="ja">
     <body>
 	<h1>
 		{{ .title }}
 	</h1>
-	<h1>
-		{{ .count }}
-	</h1>
-    <div>
-      aaaa
-    </div>
+	<table>
+	  <tr><th>name</th><th>created time</th></tr>
+	{{ range .taskList }}
+	    <tr><td>{{- .Name }}</td><td>{{- .CreatedAt}}</td></tr>
+	{{ end }}
+	</table>
+	  <ul>
+	  </ul>
     </body>
 </html>
