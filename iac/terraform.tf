@@ -27,7 +27,7 @@ resource "aws_apprunner_service" "apprunner" {
           MYSQL_HOST     = aws_db_instance.rds.address
         }
       }
-      image_identifier      = "${aws_ecr_repository.ecr.repository_url}:v9"
+      image_identifier      = "${aws_ecr_repository.ecr.repository_url}:v10"
       image_repository_type = "ECR"
     }
     auto_deployments_enabled = false
