@@ -1,0 +1,17 @@
+<html lang="ja">
+    <body>
+	<h1>
+		{{ .title }}
+	</h1>
+    {{ if .error }}
+    <div>
+    {{ .error }}
+    </div>
+    {{ end }}
+    <form action="/create" method="post">
+      <b>task: </b>
+      <input type="text" name="task"></input><br />
+      <input type="submit" value="create"></input>
+    </form>
+    </body>
+</html>
