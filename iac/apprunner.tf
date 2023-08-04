@@ -33,5 +33,5 @@ resource "aws_apprunner_service" "apprunner" {
 resource "aws_apprunner_vpc_connector" "connector" {
   vpc_connector_name = local.name
   subnets            = [aws_subnet.private_subnet_1a.id, aws_subnet.private_subnet_1c.id]
-  security_groups    = [aws_security_group.mysql.id]
+  security_groups    = [aws_security_group.app_runner.id]
 }
