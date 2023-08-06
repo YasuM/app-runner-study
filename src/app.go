@@ -1,72 +1,16 @@
 package main
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
-	"net/http"
 	"os"
-	"time"
+
+	"app-runner-study/handler"
 
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/gin-gonic/gin"
 )
-
-type task struct {
-	db *sql.DB
-}
-
-type TaskEntity struct {
-	Name      string
-	CreatedAt string
-}
-
-type TaskForm struct {
-	Name string `form:"task" binding:"required"`
-}
-
-func (t *task) taskList(ctx *gin.Context) {
-	ctx2, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	row, err := t.db.QueryContext(ctx2, `select name, created_at from task`)
-	if err != nil {
-		panic(err)
-	}
-	var taskEntity TaskEntity
-	taskList := []TaskEntity{}
-	a := []TaskEntity{}
-	fmt.Println(a)
-	for row.Next() {
-		row.Scan(&taskEntity.Name, &taskEntity.CreatedAt)
-		taskList = append(taskList, taskEntity)
-	}
-
-	ctx.HTML(http.StatusOK, "index.tmpl", gin.H{
-		"title":    "Task",
-		"taskList": taskList,
-	})
-}
-
-func (t *task) taskInput(ctx *gin.Context) {
-	ctx.HTML(http.StatusOK, "input.tmpl", gin.H{
-		"title": "Task Input",
-	})
-}
-
-func (t *task) taskCreate(ctx *gin.Context) {
-	var form TaskForm
-	if err := ctx.ShouldBind(&form); err != nil {
-		ctx.HTML(http.StatusOK, "input.tmpl", gin.H{
-			"title": "Task Input",
-			"error": err.Error(),
-		})
-		return
-	}
-	t.db.Exec(`insert into task (name, created_at) values (?, now())`, form.Name)
-
-	ctx.Redirect(http.StatusMovedPermanently, "/task")
-}
 
 func main() {
 	r := gin.Default()
@@ -86,11 +30,10 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
-	t := &task{
-		db: db,
-	}
-	r.GET("/task", t.taskList)
-	r.GET("/input", t.taskInput)
-	r.POST("/create", t.taskCreate)
+	thandler := handler.NewTaskHandler(db)
+	r.GET("/task", thandler.TaskList)
+	r.GET("/api/task", thandler.TaskListApi)
+	r.GET("/input", thandler.TaskInput)
+	r.POST("/create", thandler.TaskCreate)
 	r.Run()
 }
