@@ -1,0 +1,14 @@
+<html lang="ja">
+    <body>
+	<h1>
+		{{ .title }}
+	</h1>
+	<table>
+	  <tr><th>name</th><th>created time</th></tr>
+	{{ range .taskList }}
+	    <tr><td>{{- .Name }}</td><td>{{- .CreatedAt}}</td></tr>
+	{{ end }}
+	</table>
+	<a href="/input" >create</a>
+    </body>
+</html>
