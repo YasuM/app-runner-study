@@ -4,6 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"time"
+
+	"github.com/gin-contrib/cors"
 
 	"app-runner-study/handler"
 
@@ -14,6 +17,21 @@ import (
 
 func main() {
 	r := gin.Default()
+	r.Use(cors.New(cors.Config{
+		AllowOrigins: []string{
+			"http://localhost:3000",
+		},
+		AllowMethods: []string{
+			"POST",
+			"GET",
+			"OPTIONS",
+		},
+		AllowHeaders: []string{
+			"Content-Type",
+		},
+		AllowCredentials: false,
+		MaxAge:           24 * time.Hour,
+	}))
 	r.LoadHTMLGlob("templates/*")
 	r.GET("/health", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{

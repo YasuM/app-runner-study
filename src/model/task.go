@@ -8,6 +8,7 @@ import (
 )
 
 type TaskEntity struct {
+	Id        string `json: "id"`
 	Name      string `json: "name"`
 	CreatedAt string `json: "createdAt"`
 }
@@ -23,7 +24,7 @@ func NewTask(db *sql.DB) *task {
 func (t *task) TaskList() []TaskEntity {
 	ctx2, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	row, err := t.db.QueryContext(ctx2, `select name, created_at from task`)
+	row, err := t.db.QueryContext(ctx2, `select id, name, created_at from task`)
 	if err != nil {
 		panic(err)
 	}
@@ -32,7 +33,7 @@ func (t *task) TaskList() []TaskEntity {
 	a := []TaskEntity{}
 	fmt.Println(a)
 	for row.Next() {
-		row.Scan(&taskEntity.Name, &taskEntity.CreatedAt)
+		row.Scan(&taskEntity.Id, &taskEntity.Name, &taskEntity.CreatedAt)
 		taskList = append(taskList, taskEntity)
 	}
 	return taskList
