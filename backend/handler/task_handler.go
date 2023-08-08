@@ -13,7 +13,7 @@ type taskHandler struct {
 }
 
 type TaskForm struct {
-	Name string `form:"task" binding:"required"`
+	Name string `form:"task" json:"task" binding:"required"`
 }
 
 func NewTaskHandler(db *sql.DB) *taskHandler {
@@ -53,4 +53,15 @@ func (t *taskHandler) TaskCreate(ctx *gin.Context) {
 	task.TaskCreate(form.Name)
 
 	ctx.Redirect(http.StatusMovedPermanently, "/task")
+}
+
+func (t *taskHandler) TaskCreateApi(ctx *gin.Context) {
+	var form TaskForm
+	if err := ctx.ShouldBindJSON(&form); err != nil {
+		ctx.JSON(http.StatusBadRequest, nil)
+		return
+	}
+	task := model.NewTask(t.db)
+	task.TaskCreate(form.Name)
+	ctx.JSON(http.StatusOK, nil)
 }

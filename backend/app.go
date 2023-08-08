@@ -53,5 +53,6 @@ func main() {
 	r.GET("/api/task", thandler.TaskListApi)
 	r.GET("/input", thandler.TaskInput)
 	r.POST("/create", thandler.TaskCreate)
+	r.POST("/api/create", thandler.TaskCreateApi)
 	r.Run()
 }

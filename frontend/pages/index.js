@@ -1,4 +1,6 @@
 
+import Link from 'next/link'
+
 export default function Home({ taskList }) {
   return (
     <>
@@ -8,12 +10,15 @@ export default function Home({ taskList }) {
         <li key={Id}>{Name}({CreatedAt})</li>
       ))}
       </ul>
+      <ul>
+      <Link href="/add">Add</Link>
+      </ul>
     </>
   )
 }
 
 export async function getStaticProps() {
-  const res = await fetch(process.env.API_HOST + "/api/task")
+  const res = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/api/task")
   const taskList = await res.json()
   return {
     props: {
