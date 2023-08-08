@@ -1,0 +1,7 @@
+.DS_Store
+.terraform.lock.hcl
+.terraform
+terraform.tfstate
+terraform.tfstate.backup
+.next
+node_modules
