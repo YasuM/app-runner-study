@@ -3,9 +3,9 @@ resource "aws_cloudfront_distribution" "frontend" {
   is_ipv6_enabled     = false
   enabled             = true
   default_cache_behavior {
-    allowed_methods  = ["GET", "HEAD"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id =  aws_s3_bucket.frontend.bucket_regional_domain_name
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    target_origin_id       = aws_s3_bucket.frontend.bucket_regional_domain_name
     cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
     compress               = true
     viewer_protocol_policy = "allow-all"
@@ -46,16 +46,16 @@ resource "aws_s3_bucket_policy" "cloudfront_access" {
 
 data "aws_iam_policy_document" "cloudfront_access" {
   statement {
-    sid       = "AllowCloudFrontServicePrincipalReadOnly"
+    sid = "AllowCloudFrontServicePrincipalReadOnly"
     principals {
       type        = "Service"
       identifiers = ["cloudfront.amazonaws.com"]
     }
-    actions = ["s3:GetObject"]
+    actions   = ["s3:GetObject"]
     resources = ["arn:aws:s3:::${aws_s3_bucket.frontend.bucket}/*"]
     condition {
-      test = "StringEquals"
-      values = ["arn:aws:cloudfront::${data.aws_caller_identity.current.account_id}:distribution/${aws_cloudfront_distribution.frontend.id}"]
+      test     = "StringEquals"
+      values   = ["arn:aws:cloudfront::${data.aws_caller_identity.current.account_id}:distribution/${aws_cloudfront_distribution.frontend.id}"]
       variable = "AWS:SourceArn"
     }
   }
