@@ -1,0 +1,20 @@
+version: 0.2
+ 
+env:
+  variables:
+    DB_USER: admin
+    DB_PASSWORD: rootroot
+    DB_HOST: database-1.cx8sjkgahqhb.ap-northeast-1.rds.amazonaws.com
+phases:
+  install:
+    runtime-versions:
+      golang: 1.20	
+  pre_build:
+    commands:
+      - ls
+      - go install github.com/rubenv/sql-migrate/...@latest
+  build:
+    commands:
+      - ls
+      - cd backend
+      - sql-migrate up -env="production" -config="dbconfig.yml"
