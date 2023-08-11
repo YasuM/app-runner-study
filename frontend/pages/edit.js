@@ -7,7 +7,8 @@ export default function Edit(params) {
   async function submit () {
     const data = {
       id: Number(params.task.Id),
-      task: document.querySelector("input[name=task]").value
+      task: document.querySelector("input[name=task]").value,
+      status: Number(document.querySelector("select[name=status]").value)
     }
     console.log(data)
     const res = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/api/edit", {
@@ -28,7 +29,7 @@ export default function Edit(params) {
       </div>
       <div>
       <label>status: </label>
-      <select>
+      <select name="status">
           {taskStatusList.map((v, i) => <option key={i} value={v.Id}>{v.Label}</option>)}
       </select>
       </div>

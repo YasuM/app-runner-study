@@ -22,8 +22,9 @@ type TaskFormEditView struct {
 }
 
 type TaskFormEdit struct {
-	Id   int    `form:"id" json:"id" binding:"required"`
-	Name string `form:"task" json:"task" binding:"required"`
+	Id     int    `form:"id" json:"id" binding:"required"`
+	Name   string `form:"task" json:"task" binding:"required"`
+	Status int    `form:"status" json:"status" binding:"required"`
 }
 
 func NewTaskHandler(db *sql.DB) *taskHandler {
@@ -113,6 +114,6 @@ func (t *taskHandler) TaskEditApi(ctx *gin.Context) {
 		return
 	}
 	task := model.NewTask(t.db)
-	task.TaskUpdate(form.Id, form.Name, model.TASK_STATUS_DOING_ID)
+	task.TaskUpdate(form.Id, form.Name, form.Status)
 	ctx.JSON(http.StatusOK, nil)
 }
