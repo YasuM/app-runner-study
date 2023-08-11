@@ -50,9 +50,12 @@ func main() {
 	defer db.Close()
 	thandler := handler.NewTaskHandler(db)
 	r.GET("/task", thandler.TaskList)
+	r.GET("/api/task/:id", thandler.Task)
 	r.GET("/api/task", thandler.TaskListApi)
 	r.GET("/input", thandler.TaskInput)
+	r.GET("/api/task_status", thandler.TaskStatusList)
 	r.POST("/create", thandler.TaskCreate)
 	r.POST("/api/create", thandler.TaskCreateApi)
+	r.POST("/api/edit", thandler.TaskEditApi)
 	r.Run()
 }

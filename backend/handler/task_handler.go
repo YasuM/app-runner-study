@@ -3,6 +3,7 @@ package handler
 import (
 	"app-runner-study/model"
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -16,8 +17,30 @@ type TaskForm struct {
 	Name string `form:"task" json:"task" binding:"required"`
 }
 
+type TaskFormEditView struct {
+	Id int `uri:"id" json:"id" binding:"required"`
+}
+
+type TaskFormEdit struct {
+	Id   int    `form:"id" json:"id" binding:"required"`
+	Name string `form:"task" json:"task" binding:"required"`
+}
+
 func NewTaskHandler(db *sql.DB) *taskHandler {
 	return &taskHandler{db}
+}
+
+func (t *taskHandler) Task(ctx *gin.Context) {
+	var form TaskFormEditView
+	if err := ctx.ShouldBindUri(&form); err != nil {
+		fmt.Println(ctx.Param("id"))
+		fmt.Println(err)
+		ctx.JSON(http.StatusBadRequest, nil)
+		return
+	}
+	task := model.NewTask(t.db)
+	task.TaskFind(form.Id)
+	ctx.JSON(http.StatusOK, task.TaskFind(form.Id))
 }
 
 func (t *taskHandler) TaskList(ctx *gin.Context) {
@@ -27,6 +50,17 @@ func (t *taskHandler) TaskList(ctx *gin.Context) {
 		"title":    "Task",
 		"taskList": task.TaskList(),
 	})
+}
+
+func (t *taskHandler) TaskStatusList(ctx *gin.Context) {
+	list := []map[string]string{}
+	for i, v := range model.TaskStatusLabels {
+		list = append(list, map[string]string{
+			"Id":    fmt.Sprint(i),
+			"Label": v,
+		})
+	}
+	ctx.JSON(http.StatusOK, list)
 }
 
 func (t *taskHandler) TaskListApi(ctx *gin.Context) {
@@ -50,7 +84,7 @@ func (t *taskHandler) TaskCreate(ctx *gin.Context) {
 		return
 	}
 	task := model.NewTask(t.db)
-	task.TaskCreate(form.Name)
+	task.TaskCreate(form.Name, model.TASK_STATUS_TODO_ID)
 
 	ctx.Redirect(http.StatusMovedPermanently, "/task")
 }
@@ -62,6 +96,23 @@ func (t *taskHandler) TaskCreateApi(ctx *gin.Context) {
 		return
 	}
 	task := model.NewTask(t.db)
-	task.TaskCreate(form.Name)
+	if err := task.TaskCreate(form.Name, model.TASK_STATUS_TODO_ID); err != nil {
+		fmt.Println(err)
+		ctx.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+	ctx.JSON(http.StatusOK, nil)
+}
+
+func (t *taskHandler) TaskEditApi(ctx *gin.Context) {
+	fmt.Println("TaskEditApi")
+	var form TaskFormEdit
+	if err := ctx.ShouldBindJSON(&form); err != nil {
+		fmt.Println(err)
+		ctx.JSON(http.StatusBadRequest, nil)
+		return
+	}
+	task := model.NewTask(t.db)
+	task.TaskUpdate(form.Id, form.Name, model.TASK_STATUS_DOING_ID)
 	ctx.JSON(http.StatusOK, nil)
 }

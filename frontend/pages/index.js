@@ -6,8 +6,8 @@ export default function Home({ taskList }) {
     <>
       <h1>Task</h1>
       <ul>
-      {taskList.map(({ Id, Name, CreatedAt }) => (
-        <li key={Id}>{Name}({CreatedAt})</li>
+      {taskList.map(({ Id, Name, StatusLabel, CreatedAt }) => (
+        <li key={Id}>{Name} {StatusLabel} {CreatedAt} <a href={`/edit?id=${Id}`}>edit</a></li>
       ))}
       </ul>
       <ul>
