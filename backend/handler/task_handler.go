@@ -14,17 +14,17 @@ type taskHandler struct {
 }
 
 type TaskForm struct {
-	Name string `form:"task" json:"task" binding:"required"`
+	Name string `json:"task" binding:"required"`
 }
 
 type TaskFormEditView struct {
-	Id int `uri:"id" json:"id" binding:"required"`
+	Id int `uri:"id" binding:"required"`
 }
 
 type TaskFormEdit struct {
-	Id     int    `form:"id" json:"id" binding:"required"`
-	Name   string `form:"task" json:"task" binding:"required"`
-	Status int    `form:"status" json:"status" binding:"required"`
+	Id     int    `json:"id" binding:"required"`
+	Name   string `json:"task" binding:"required"`
+	Status int    `json:"status" binding:"required"`
 }
 
 func NewTaskHandler(db *sql.DB) *taskHandler {
@@ -106,7 +106,6 @@ func (t *taskHandler) TaskCreateApi(ctx *gin.Context) {
 }
 
 func (t *taskHandler) TaskEditApi(ctx *gin.Context) {
-	fmt.Println("TaskEditApi")
 	var form TaskFormEdit
 	if err := ctx.ShouldBindJSON(&form); err != nil {
 		fmt.Println(err)
