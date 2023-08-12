@@ -10,6 +10,9 @@ services:
       TZ: 'Asia/Tokyo'
     ports:
     - 3306:3306  
+    volumes:
+    - ./sql:/docker-entrypoint-initdb.d
+
   app:
     build:
       dockerfile: Dockerfile.local

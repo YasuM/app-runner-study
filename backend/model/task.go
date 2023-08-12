@@ -44,7 +44,7 @@ func (t *task) TaskFind(id int) TaskEntity {
 func (t *task) TaskList() []TaskEntity {
 	ctx2, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	row, err := t.db.QueryContext(ctx2, `select id, name, status, created_at from task`)
+	row, err := t.db.QueryContext(ctx2, `select id, name, status, created_at from task order by created_at desc`)
 	if err != nil {
 		panic(err)
 	}

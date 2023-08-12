@@ -32,7 +32,6 @@ func main() {
 		AllowCredentials: false,
 		MaxAge:           24 * time.Hour,
 	}))
-	r.LoadHTMLGlob("templates/*")
 	r.GET("/health", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{
 			"message": "ok",

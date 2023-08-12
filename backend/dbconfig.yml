@@ -1,3 +1,9 @@
+test:
+  dialect: mysql
+  datasource: root:root@(127.0.0.1:3306)/task_test?parseTime=true
+  dir: migrations
+  table: migrations
+
 development:
   dialect: mysql
   datasource: root:root@(127.0.0.1:3306)/task?parseTime=true
