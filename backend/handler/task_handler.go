@@ -93,7 +93,8 @@ func (t *taskHandler) TaskCreate(ctx *gin.Context) {
 func (t *taskHandler) TaskCreateApi(ctx *gin.Context) {
 	var form TaskForm
 	if err := ctx.ShouldBindJSON(&form); err != nil {
-		ctx.JSON(http.StatusBadRequest, nil)
+		fmt.Println(err)
+		ctx.JSON(http.StatusBadRequest, "validate error")
 		return
 	}
 	task := model.NewTask(t.db)
@@ -102,7 +103,7 @@ func (t *taskHandler) TaskCreateApi(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
-	ctx.JSON(http.StatusOK, nil)
+	ctx.JSON(http.StatusOK, "task: "+form.Name+" create")
 }
 
 func (t *taskHandler) TaskEditApi(ctx *gin.Context) {
