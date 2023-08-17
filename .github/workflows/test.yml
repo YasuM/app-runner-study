@@ -3,8 +3,7 @@ name: Go Test
 on: [push]
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,6 +19,9 @@ jobs:
         working-directory: ./backend
       - name: db migrate
         run: |
+          until mysqladmin ping -h 127.0.0.1 -u root -proot; do
+            sleep 2
+          done
           sql-migrate up -env=test
         working-directory: ./backend
       - name: Test
