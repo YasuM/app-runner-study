@@ -15,7 +15,12 @@ jobs:
           go-version: '1.18'
       - name: db start
         run: |
+          go install github.com/rubenv/sql-migrate/...@latest
           docker compose up -d db
+        working-directory: ./backend
+      - name: db migrate
+        run: |
+          sql-migrate up -env=test
         working-directory: ./backend
       - name: Test
         run: go test -v ./...
