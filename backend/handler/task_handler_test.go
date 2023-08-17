@@ -48,9 +48,15 @@ func TestTaskListApi(t *testing.T) {
 	ctx, _ := gin.CreateTestContext(w)
 	ctx.Request = httptest.NewRequest("GET", "/", nil)
 	now := time.Now()
-	db.Exec("insert into task(name, status, created_at) values(?, ?, ?)", "task1", model.TASK_STATUS_TODO_ID, now.Format("2006-01-02T15:04:05Z07:00"))
+	_, err := db.Exec("insert into task(name, status, created_at) values(?, ?, ?)", "task1", model.TASK_STATUS_TODO_ID, now.Format("2006-01-02 15:04:05"))
+	if err != nil {
+		t.Fatal(err)
+	}
 	now = now.Add(time.Hour)
-	db.Exec("insert into task(name, status, created_at) values(?, ?, ?)", "task2", model.TASK_STATUS_TODO_ID, now.Format("2006-01-02T15:04:05Z07:00"))
+	_, err = db.Exec("insert into task(name, status, created_at) values(?, ?, ?)", "task2", model.TASK_STATUS_TODO_ID, now.Format("2006-01-02 15:04:05"))
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	h := NewTaskHandler(db)
 	h.TaskListApi(ctx)
@@ -63,8 +69,11 @@ func TestTaskListApi(t *testing.T) {
 	assert.Equal(t, model.TaskStatusLabels[actual[1].Status], actual[1].StatusLabel)
 }
 
-func db() (*sql.DB, func()) {
+func init() {
 	txdb.Register("txdb", "mysql", "root:root@/task_test")
+}
+
+func db() (*sql.DB, func()) {
 	db, err := sql.Open("txdb", "identifier")
 	if err != nil {
 		panic(err)
