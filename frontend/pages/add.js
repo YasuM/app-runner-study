@@ -1,5 +1,8 @@
+import { useRouter } from 'next/navigation'
 
 export default function Input() {
+  const router = useRouter()
+
   async function submit() {
     const data = {task: document.querySelector("input[name=task]").value}
     const res = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/api/create", {
@@ -9,8 +12,7 @@ export default function Input() {
       },
       body: JSON.stringify(data),
     });
-    console.log(res)
-    
+    router.push('/')
   }
   return (
     <>
