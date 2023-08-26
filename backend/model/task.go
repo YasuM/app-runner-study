@@ -8,7 +8,7 @@ import (
 )
 
 type TaskEntity struct {
-	Id          string `json: "id"`
+	Id          int64  `json: "id"`
 	Name        string `json: "name"`
 	Status      int32  `json: "status"`
 	StatusLabel string `json: "statusLabel"`
@@ -52,6 +52,7 @@ func (t *task) TaskList() []TaskEntity {
 	var taskEntity TaskEntity
 	taskList := []TaskEntity{}
 	for _, t := range tasks {
+		taskEntity.Id = t.ID
 		taskEntity.Name = t.Name
 		taskEntity.CreatedAt = t.CreatedAt.String()
 		taskEntity.Status = t.Status
