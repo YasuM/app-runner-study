@@ -27,6 +27,10 @@ type TaskFormEdit struct {
 	Status int    `json:"status" binding:"required"`
 }
 
+type TaskFormDelete struct {
+	Id int64 `uri:"id" binding:"required"`
+}
+
 func NewTaskHandler(db *sql.DB) *taskHandler {
 	return &taskHandler{db}
 }
@@ -115,5 +119,17 @@ func (t *taskHandler) TaskEditApi(ctx *gin.Context) {
 	}
 	task := model.NewTask(t.db)
 	task.TaskUpdate(form.Id, form.Name, form.Status)
+	ctx.JSON(http.StatusOK, nil)
+}
+
+func (t *taskHandler) TaskDeleteApi(ctx *gin.Context) {
+	var form TaskFormDelete
+	if err := ctx.ShouldBindUri(&form); err != nil {
+		fmt.Println(err)
+		ctx.JSON(http.StatusBadRequest, nil)
+		return
+	}
+	task := model.NewTask(t.db)
+	task.TaskDelete(form.Id)
 	ctx.JSON(http.StatusOK, nil)
 }

@@ -53,5 +53,6 @@ func main() {
 	r.GET("/api/task_status", thandler.TaskStatusList)
 	r.POST("/api/create", thandler.TaskCreateApi)
 	r.POST("/api/edit", thandler.TaskEditApi)
+	r.POST("/api/delete/:id", thandler.TaskDeleteApi)
 	r.Run()
 }

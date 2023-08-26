@@ -9,3 +9,6 @@ INSERT INTO task (name, status, created_at) values (?, ?, now());
 
 -- name: UpdateTask :exec
 UPDATE task SET name = ?, status = ? WHERE id = ?;
+
+-- name: DeleteTask :exec
+DELETE FROM task where id = ?;

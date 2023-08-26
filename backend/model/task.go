@@ -82,3 +82,9 @@ func (t *task) TaskUpdate(id int64, name string, status int) error {
 	_, err := t.db.Exec("update task set name = ?, status = ? where id = ?", name, status, id)
 	return err
 }
+
+func (t *task) TaskDelete(id int64) error {
+	query := entity.New(t.db)
+	err := query.DeleteTask(context.Background(), id)
+	return err
+}
