@@ -40,7 +40,7 @@ func main() {
 	mysqlUser := os.Getenv("MYSQL_USER")
 	mysqlPassword := os.Getenv("MYSQL_PASSWORD")
 	mysqlHost := os.Getenv("MYSQL_HOST")
-	dsn := fmt.Sprintf("%s:%s@(%s:3306)/task", mysqlUser, mysqlPassword, mysqlHost)
+	dsn := fmt.Sprintf("%s:%s@(%s:3306)/task?parseTime=true", mysqlUser, mysqlPassword, mysqlHost)
 
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {

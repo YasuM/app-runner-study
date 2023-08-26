@@ -1,0 +1,15 @@
+version: "2"
+project:
+    id: ""
+sql:
+  - engine: "mysql"
+    queries: "query.sql"
+    schema: "schema.sql"
+    gen:
+      go:
+        package: "entity"
+        out: "entity"
+overrides:
+    go: null
+plugins: []
+rules: []

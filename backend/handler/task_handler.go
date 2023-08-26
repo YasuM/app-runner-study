@@ -22,7 +22,7 @@ type TaskFormEditView struct {
 }
 
 type TaskFormEdit struct {
-	Id     int    `json:"id" binding:"required"`
+	Id     int64  `json:"id" binding:"required"`
 	Name   string `json:"task" binding:"required"`
 	Status int    `json:"status" binding:"required"`
 }

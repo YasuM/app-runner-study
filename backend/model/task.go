@@ -1,9 +1,9 @@
 package model
 
 import (
+	"app-runner-study/entity"
 	"context"
 	"database/sql"
-	"fmt"
 	"time"
 )
 
@@ -44,28 +44,39 @@ func (t *task) TaskFind(id int) TaskEntity {
 func (t *task) TaskList() []TaskEntity {
 	ctx2, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	row, err := t.db.QueryContext(ctx2, `select id, name, status, created_at from task order by created_at desc`)
+	query := entity.New(t.db)
+	tasks, err := query.LisTasks(ctx2)
 	if err != nil {
 		panic(err)
 	}
 	var taskEntity TaskEntity
 	taskList := []TaskEntity{}
-	a := []TaskEntity{}
-	fmt.Println(a)
-	for row.Next() {
-		row.Scan(&taskEntity.Id, &taskEntity.Name, &taskEntity.Status, &taskEntity.CreatedAt)
-		taskEntity.StatusLabel = TaskStatusLabels[taskEntity.Status]
+	for _, t := range tasks {
+		taskEntity.Name = t.Name
+		taskEntity.CreatedAt = t.CreatedAt.String()
+		taskEntity.StatusLabel = TaskStatusLabels[int(t.Status)]
 		taskList = append(taskList, taskEntity)
 	}
 	return taskList
 }
 
 func (t *task) TaskCreate(name string, status int) error {
-	_, err := t.db.Exec(`insert into task (name, status, created_at) values (?, ?, now())`, name, status)
+	query := entity.New(t.db)
+
+	_, err := query.CreateTask(context.Background(), entity.CreateTaskParams{
+		Name:   name,
+		Status: int32(status),
+	})
 	return err
 }
 
-func (t *task) TaskUpdate(id int, name string, status int) error {
+func (t *task) TaskUpdate(id int64, name string, status int) error {
+	query := entity.New(t.db)
+	query.UpdateTask(context.Background(), entity.UpdateTaskParams{
+		Name:   name,
+		Status: TASK_STATUS_TODO_ID,
+		ID:     id,
+	})
 	_, err := t.db.Exec("update task set name = ?, status = ? where id = ?", name, status, id)
 	return err
 }
