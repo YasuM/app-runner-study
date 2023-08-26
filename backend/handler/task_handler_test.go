@@ -70,7 +70,7 @@ func TestTaskListApi(t *testing.T) {
 }
 
 func init() {
-	txdb.Register("txdb", "mysql", "root:root@/task_test")
+	txdb.Register("txdb", "mysql", "root:root@/task_test?parseTime=true")
 }
 
 func db() (*sql.DB, func()) {
