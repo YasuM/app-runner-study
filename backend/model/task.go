@@ -10,7 +10,7 @@ import (
 type TaskEntity struct {
 	Id          string `json: "id"`
 	Name        string `json: "name"`
-	Status      int    `json: "status"`
+	Status      int32  `json: "status"`
 	StatusLabel string `json: "statusLabel"`
 	CreatedAt   string `json: "createdAt"`
 }
@@ -19,7 +19,7 @@ const TASK_STATUS_TODO_ID = 1
 const TASK_STATUS_DOING_ID = 2
 const TASK_STATUS_DONE_ID = 3
 
-var TaskStatusLabels map[int]string = map[int]string{
+var TaskStatusLabels map[int32]string = map[int32]string{
 	TASK_STATUS_TODO_ID:  "todo",
 	TASK_STATUS_DOING_ID: "doing",
 	TASK_STATUS_DONE_ID:  "done",
@@ -54,18 +54,19 @@ func (t *task) TaskList() []TaskEntity {
 	for _, t := range tasks {
 		taskEntity.Name = t.Name
 		taskEntity.CreatedAt = t.CreatedAt.String()
-		taskEntity.StatusLabel = TaskStatusLabels[int(t.Status)]
+		taskEntity.Status = t.Status
+		taskEntity.StatusLabel = TaskStatusLabels[t.Status]
 		taskList = append(taskList, taskEntity)
 	}
 	return taskList
 }
 
-func (t *task) TaskCreate(name string, status int) error {
+func (t *task) TaskCreate(name string, status int32) error {
 	query := entity.New(t.db)
 
 	_, err := query.CreateTask(context.Background(), entity.CreateTaskParams{
 		Name:   name,
-		Status: int32(status),
+		Status: status,
 	})
 	return err
 }
