@@ -1,13 +1,13 @@
 package handler
 
 import (
-	"app-runner-study/model"
 	"bytes"
 	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"task-app-study/model"
 	"testing"
 	"time"
 

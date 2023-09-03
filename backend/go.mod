@@ -1,4 +1,4 @@
-module app-runner-study
+module task-app-study
 
 go 1.18
 

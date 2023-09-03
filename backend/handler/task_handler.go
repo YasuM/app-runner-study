@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"app-runner-study/model"
 	"database/sql"
 	"fmt"
 	"net/http"
+	"task-app-study/model"
 
 	"github.com/gin-gonic/gin"
 )

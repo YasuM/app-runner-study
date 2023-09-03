@@ -8,7 +8,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 
-	"app-runner-study/handler"
+	"task-app-study/handler"
 
 	_ "github.com/go-sql-driver/mysql"
 

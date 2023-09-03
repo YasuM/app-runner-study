@@ -1,10 +1,10 @@
 package model
 
 import (
-	"app-runner-study/entity"
 	"context"
 	"database/sql"
 	"fmt"
+	"task-app-study/entity"
 	"time"
 )
 
