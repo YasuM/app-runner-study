@@ -35,12 +35,6 @@ func TestTaskCreateApi(t *testing.T) {
 	assert.Equal(t, w.Body.String(), "\"task: "+name+" create\"")
 }
 
-type A struct {
-	Name        string
-	Status      int
-	StatusLabel string
-}
-
 func TestTaskListApi(t *testing.T) {
 	db, dbClose := db()
 	defer dbClose()
