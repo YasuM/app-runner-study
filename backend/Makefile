@@ -1,5 +1,8 @@
-app-up:
+up: 
 	docker-compose up -d
+	sql-migrate up
+down:
+	docker-compose down
 db-migrate:
 	sql-migrate up
 sqlc-generate: db-migrate

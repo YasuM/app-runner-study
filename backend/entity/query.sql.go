@@ -24,6 +24,20 @@ func (q *Queries) CreateTask(ctx context.Context, arg CreateTaskParams) (sql.Res
 	return q.db.ExecContext(ctx, createTask, arg.Name, arg.Status)
 }
 
+const createUser = `-- name: CreateUser :execresult
+INSERT INTO user(name, email, password, created_at) values(?, ?, ?, now())
+`
+
+type CreateUserParams struct {
+	Name     string
+	Email    string
+	Password string
+}
+
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, createUser, arg.Name, arg.Email, arg.Password)
+}
+
 const deleteTask = `-- name: DeleteTask :exec
 DELETE FROM task where id = ?
 `

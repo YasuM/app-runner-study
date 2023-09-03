@@ -12,3 +12,6 @@ UPDATE task SET name = ?, status = ? WHERE id = ?;
 
 -- name: DeleteTask :exec
 DELETE FROM task where id = ?;
+
+-- name: CreateUser :execresult
+INSERT INTO user(name, email, password, created_at) values(?, ?, ?, now());

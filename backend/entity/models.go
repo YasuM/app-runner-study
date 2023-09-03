@@ -14,3 +14,11 @@ type Task struct {
 	CreatedAt time.Time
 	Status    int32
 }
+
+type User struct {
+	ID        int64
+	Name      string
+	Email     string
+	Password  string
+	CreatedAt time.Time
+}
