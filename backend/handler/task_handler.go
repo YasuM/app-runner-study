@@ -18,7 +18,7 @@ type TaskForm struct {
 }
 
 type TaskFormEditView struct {
-	Id int `uri:"id" binding:"required"`
+	Id int64 `uri:"id" binding:"required"`
 }
 
 type TaskFormEdit struct {

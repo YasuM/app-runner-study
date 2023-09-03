@@ -4,6 +4,7 @@ import (
 	"app-runner-study/entity"
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 )
 
@@ -33,11 +34,21 @@ func NewTask(db *sql.DB) *task {
 	return &task{db}
 }
 
-func (t *task) TaskFind(id int) TaskEntity {
-	row := t.db.QueryRow("select id, name, status, created_at from task where id = ?", id)
-	var taskEntity TaskEntity
-	row.Scan(&taskEntity.Id, &taskEntity.Name, &taskEntity.Status, &taskEntity.CreatedAt)
-	taskEntity.StatusLabel = TaskStatusLabels[taskEntity.Status]
+func (t *task) TaskFind(id int64) TaskEntity {
+	query := entity.New(t.db)
+	task, err := query.GetTask(context.Background(), id)
+	if err != nil {
+		return TaskEntity{}
+	}
+	fmt.Println(task)
+	// row := t.db.QueryRow("select id, name, status, created_at from task where id = ?", id)
+	var taskEntity TaskEntity = TaskEntity{
+		Id:          task.ID,
+		Name:        task.Name,
+		Status:      task.Status,
+		CreatedAt:   task.CreatedAt.String(),
+		StatusLabel: TaskStatusLabels[task.Status],
+	}
 	return taskEntity
 }
 
@@ -74,13 +85,11 @@ func (t *task) TaskCreate(name string, status int32) error {
 
 func (t *task) TaskUpdate(id int64, name string, status int) error {
 	query := entity.New(t.db)
-	query.UpdateTask(context.Background(), entity.UpdateTaskParams{
+	return query.UpdateTask(context.Background(), entity.UpdateTaskParams{
 		Name:   name,
 		Status: TASK_STATUS_TODO_ID,
 		ID:     id,
 	})
-	_, err := t.db.Exec("update task set name = ?, status = ? where id = ?", name, status, id)
-	return err
 }
 
 func (t *task) TaskDelete(id int64) error {
