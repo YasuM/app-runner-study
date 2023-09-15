@@ -15,3 +15,6 @@ DELETE FROM task where id = ?;
 
 -- name: CreateUser :execresult
 INSERT INTO user(name, email, password, created_at) values(?, ?, ?, now());
+
+-- name: CountUserByEmail :one
+SELECT count(*) FROM user where email = ?;

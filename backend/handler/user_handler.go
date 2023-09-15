@@ -34,6 +34,11 @@ func (u *userHandler) UserCreate(ctx *gin.Context) {
 		return
 	}
 	query := entity.New(u.db)
+	cnt, _ := query.CountUserByEmail(context.Background(), form.Email)
+	if cnt > 0 {
+		ctx.JSON(http.StatusBadRequest, "email duplicate")
+		return
+	}
 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(form.Password), bcrypt.DefaultCost)
 	if err != nil {
 		log.Fatal(err)

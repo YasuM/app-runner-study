@@ -11,6 +11,17 @@ import (
 	"time"
 )
 
+const countUserByEmail = `-- name: CountUserByEmail :one
+SELECT count(*) FROM user where email = ?
+`
+
+func (q *Queries) CountUserByEmail(ctx context.Context, email string) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countUserByEmail, email)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createTask = `-- name: CreateTask :execresult
 INSERT INTO task (name, status, created_at) values (?, ?, now())
 `
