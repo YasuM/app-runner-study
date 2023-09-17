@@ -81,6 +81,17 @@ func (q *Queries) GetTask(ctx context.Context, id int64) (GetTaskRow, error) {
 	return i, err
 }
 
+const getUserPasswordByEmail = `-- name: GetUserPasswordByEmail :one
+SELECT password FROM user WHERE email = ? limit 1
+`
+
+func (q *Queries) GetUserPasswordByEmail(ctx context.Context, email string) (string, error) {
+	row := q.db.QueryRowContext(ctx, getUserPasswordByEmail, email)
+	var password string
+	err := row.Scan(&password)
+	return password, err
+}
+
 const lisTasks = `-- name: LisTasks :many
 select id, name, status, created_at from task order by created_at desc
 `
