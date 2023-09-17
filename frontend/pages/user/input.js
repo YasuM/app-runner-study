@@ -6,7 +6,7 @@ export default function Input() {
     const data = {
       name: document.querySelector("input[name=name]").value,
       email: document.querySelector("input[name=email]").value,
-      password: document.querySelector("input[name=email]").value
+      password: document.querySelector("input[name=password]").value
     }
     const res = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/api/user/create", {
       method: "POST",
