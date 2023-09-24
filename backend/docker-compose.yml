@@ -26,3 +26,7 @@ services:
       TZ: 'Asia/Tokyo'
     volumes:
       - ./:/app
+  redis:
+    image: "redis:7.2.1"
+    ports:
+      - "6379:6379"   

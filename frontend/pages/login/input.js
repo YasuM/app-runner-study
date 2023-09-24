@@ -11,6 +11,7 @@ export default function Input() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
+      credentials: "include"
     })
     // router.push('/')
   }

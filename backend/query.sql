@@ -19,5 +19,5 @@ INSERT INTO user(name, email, password, created_at) values(?, ?, ?, now());
 -- name: CountUserByEmail :one
 SELECT count(*) FROM user where email = ?;
 
--- name: GetUserPasswordByEmail :one
-SELECT password FROM user WHERE email = ? limit 1;
+-- name: GetUserdByEmail :one
+SELECT id, name, password FROM user WHERE email = ? limit 1;

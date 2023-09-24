@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gin-contrib/cors"
+	"github.com/redis/go-redis/v9"
 
 	"task-app-study/handler"
 
@@ -29,9 +30,15 @@ func main() {
 		AllowHeaders: []string{
 			"Content-Type",
 		},
-		AllowCredentials: false,
+		AllowCredentials: true,
 		MaxAge:           24 * time.Hour,
 	}))
+	redis := redis.NewClient(&redis.Options{
+		Addr: "redis:6379",
+	})
+	if redis == nil {
+		panic(redis)
+	}
 	r.GET("/health", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{
 			"message": "ok",
@@ -49,7 +56,7 @@ func main() {
 	defer db.Close()
 	thandler := handler.NewTaskHandler(db)
 	uhandler := handler.NewUserHandler(db)
-	lhandler := handler.NewLoginHandler(db)
+	lhandler := handler.NewLoginHandler(db, redis)
 	r.GET("/api/task/:id", thandler.Task)
 	r.GET("/api/task", thandler.TaskListApi)
 	r.GET("/api/task_status", thandler.TaskStatusList)
@@ -58,5 +65,5 @@ func main() {
 	r.POST("/api/delete/:id", thandler.TaskDeleteApi)
 	r.POST("/api/user/create", uhandler.UserCreate)
 	r.POST("/api/login", lhandler.Login)
-	r.Run()
+	r.RunTLS(":8080", "/app/cmd/api/localhost.pem", "/app/cmd/api/localhost-key.pem")
 }
