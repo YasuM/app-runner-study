@@ -7,7 +7,7 @@ export default function Index() {
   const [taskList, setTaskList] = useState([])
   const router = useRouter()
   async function deleteTask(id) {
-    await fetch(process.env.NEXT_PUBLIC_API_HOST + "/api/delete/" + id, {
+    await fetch(process.env.NEXT_PUBLIC_API_HOST + "/delete/" + id, {
       method: "POST",
     })
     router.push('/')
@@ -16,7 +16,7 @@ export default function Index() {
   useEffect(() => {
     const fetchData = async () => {
       console.log(process.env.NEXT_PUBLIC_API_HOST)
-      const res = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/api/task", {
+      const res = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/task", {
         method: 'GET',
         mode: 'cors',
         credentials: 'include'

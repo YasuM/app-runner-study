@@ -5,7 +5,7 @@ export default function Input() {
       email : document.querySelector("input[name=email]").value,
       password: document.querySelector("input[name=password]").value
     }
-    const res = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/api/login", {
+    const res = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

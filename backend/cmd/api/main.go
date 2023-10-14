@@ -30,14 +30,14 @@ func main() {
 			"message": "ok",
 		})
 	})
-	r.GET("/api/task/:id", thandler.Task)
-	r.GET("/api/task", thandler.TaskListApi)
-	r.GET("/api/task_status", thandler.TaskStatusList)
-	r.POST("/api/create", thandler.TaskCreateApi)
-	r.POST("/api/edit", thandler.TaskEditApi)
-	r.POST("/api/delete/:id", thandler.TaskDeleteApi)
-	r.POST("/api/user/create", uhandler.UserCreate)
-	r.POST("/api/login", lhandler.Login)
+	r.GET("/task/:id", thandler.Task)
+	r.GET("/task", thandler.TaskList)
+	r.GET("/task_status", thandler.TaskStatusList)
+	r.POST("/create", thandler.TaskCreate)
+	r.POST("/edit", thandler.TaskEdit)
+	r.POST("/delete/:id", thandler.TaskDelete)
+	r.POST("/user/create", uhandler.UserCreate)
+	r.POST("/login", lhandler.Login)
 	r.RunTLS(":8080", "/app/cmd/api/localhost.pem", "/app/cmd/api/localhost-key.pem")
 }
 

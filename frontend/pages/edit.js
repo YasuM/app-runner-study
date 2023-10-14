@@ -11,7 +11,7 @@ export default function Edit(params) {
       status: Number(document.querySelector("select[name=status]").value)
     }
     console.log(data)
-    const res = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/api/edit", {
+    const res = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/edit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -41,8 +41,8 @@ export default function Edit(params) {
 }
 
 export async function getServerSideProps({ query }) {
-  const resTask = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/api/task/" + query.id)
-  const resTaskStatus = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/api/task_status")
+  const resTask = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/task/" + query.id)
+  const resTaskStatus = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/task_status")
   const task = await resTask.json()
   const taskStatusList = await resTaskStatus.json()
   return {

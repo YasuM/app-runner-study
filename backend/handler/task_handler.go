@@ -50,15 +50,6 @@ func (t *taskHandler) Task(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, task.TaskFind(form.Id))
 }
 
-func (t *taskHandler) TaskList(ctx *gin.Context) {
-	task := model.NewTask(t.db)
-
-	ctx.HTML(http.StatusOK, "index.tmpl", gin.H{
-		"title":    "Task",
-		"taskList": task.TaskList(),
-	})
-}
-
 func (t *taskHandler) TaskStatusList(ctx *gin.Context) {
 	list := []map[string]string{}
 	for i, v := range model.TaskStatusLabels {
@@ -70,7 +61,7 @@ func (t *taskHandler) TaskStatusList(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, list)
 }
 
-func (t *taskHandler) TaskListApi(ctx *gin.Context) {
+func (t *taskHandler) TaskList(ctx *gin.Context) {
 	task := model.NewTask(t.db)
 	ctx.JSON(http.StatusOK, task.TaskList())
 }
@@ -81,7 +72,7 @@ func (t *taskHandler) TaskInput(ctx *gin.Context) {
 	})
 }
 
-func (t *taskHandler) TaskCreateApi(ctx *gin.Context) {
+func (t *taskHandler) TaskCreate(ctx *gin.Context) {
 	var form TaskForm
 	if err := ctx.ShouldBindJSON(&form); err != nil {
 		fmt.Println(err)
@@ -100,7 +91,7 @@ func (t *taskHandler) TaskCreateApi(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, "task: "+form.Name+" create")
 }
 
-func (t *taskHandler) TaskEditApi(ctx *gin.Context) {
+func (t *taskHandler) TaskEdit(ctx *gin.Context) {
 	var form TaskFormEdit
 	if err := ctx.ShouldBindJSON(&form); err != nil {
 		fmt.Println(err)
@@ -112,7 +103,7 @@ func (t *taskHandler) TaskEditApi(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, nil)
 }
 
-func (t *taskHandler) TaskDeleteApi(ctx *gin.Context) {
+func (t *taskHandler) TaskDelete(ctx *gin.Context) {
 	var form TaskFormDelete
 	if err := ctx.ShouldBindUri(&form); err != nil {
 		fmt.Println(err)
