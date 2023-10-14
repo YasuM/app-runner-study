@@ -23,16 +23,17 @@ func (q *Queries) CountUserByEmail(ctx context.Context, email string) (int64, er
 }
 
 const createTask = `-- name: CreateTask :execresult
-INSERT INTO task (name, status, created_at) values (?, ?, now())
+INSERT INTO task (name, user_id, status, created_at) values (?, ?, ?, now())
 `
 
 type CreateTaskParams struct {
 	Name   string
+	UserID int64
 	Status int32
 }
 
 func (q *Queries) CreateTask(ctx context.Context, arg CreateTaskParams) (sql.Result, error) {
-	return q.db.ExecContext(ctx, createTask, arg.Name, arg.Status)
+	return q.db.ExecContext(ctx, createTask, arg.Name, arg.UserID, arg.Status)
 }
 
 const createUser = `-- name: CreateUser :execresult

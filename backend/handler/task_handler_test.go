@@ -14,6 +14,7 @@ import (
 	"github.com/DATA-DOG/go-txdb"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -52,7 +53,7 @@ func TestTaskListApi(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	h := NewTaskHandler(db)
+	h := NewTaskHandler(db, newRedisClient())
 	h.TaskListApi(ctx)
 
 	var actual []model.TaskEntity
@@ -75,4 +76,14 @@ func db() (*sql.DB, func()) {
 	return db, func() {
 		db.Close()
 	}
+}
+
+func newRedisClient() *redis.Client {
+	redis := redis.NewClient(&redis.Options{
+		Addr: "redis:6379",
+	})
+	if redis == nil {
+		panic(redis)
+	}
+	return redis
 }

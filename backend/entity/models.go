@@ -11,6 +11,7 @@ import (
 type Task struct {
 	ID        int64
 	Name      string
+	UserID    int64
 	CreatedAt time.Time
 	Status    int32
 }

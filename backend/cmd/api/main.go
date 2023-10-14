@@ -22,7 +22,7 @@ func main() {
 	redis := newRedisClient()
 	db := newMySQLClient()
 	defer db.Close()
-	thandler := handler.NewTaskHandler(db)
+	thandler := handler.NewTaskHandler(db, redis)
 	uhandler := handler.NewUserHandler(db)
 	lhandler := handler.NewLoginHandler(db, redis)
 	r.GET("/health", func(ctx *gin.Context) {

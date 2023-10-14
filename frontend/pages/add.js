@@ -10,6 +10,8 @@ export default function Input() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: 'include',
+      mode: 'cors',
       body: JSON.stringify(data),
     });
     router.push('/')

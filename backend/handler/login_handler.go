@@ -3,14 +3,12 @@ package handler
 import (
 	"context"
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"task-app-study/entity"
-	"time"
+	"task-app-study/model"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -49,14 +47,7 @@ func (l *loginHandler) Login(ctx *gin.Context) {
 		return
 	}
 	ctx.SetSameSite(http.SameSiteNoneMode)
-	sid := uuid.New().String()
-	userJson, err := json.Marshal(userSession{user.ID})
-	if err != nil {
-		panic("json marshal error")
-	}
-	ctx.SetCookie("SESSION_ID", sid, 3600, "/", "localhost", true, true)
-	if err = l.redis.Set(context.Background(), sid, string(userJson), time.Hour*3).Err(); err != nil {
-		panic("redis set error")
-	}
+	session := model.NewSession(l.redis)
+	session.Create(user.ID, ctx)
 	ctx.JSON(http.StatusOK, "login success")
 }

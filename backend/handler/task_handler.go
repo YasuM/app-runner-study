@@ -7,10 +7,12 @@ import (
 	"task-app-study/model"
 
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
 )
 
 type taskHandler struct {
-	db *sql.DB
+	db    *sql.DB
+	redis *redis.Client
 }
 
 type TaskForm struct {
@@ -31,8 +33,8 @@ type TaskFormDelete struct {
 	Id int64 `uri:"id" binding:"required"`
 }
 
-func NewTaskHandler(db *sql.DB) *taskHandler {
-	return &taskHandler{db}
+func NewTaskHandler(db *sql.DB, redis *redis.Client) *taskHandler {
+	return &taskHandler{db, redis}
 }
 
 func (t *taskHandler) Task(ctx *gin.Context) {
@@ -79,21 +81,6 @@ func (t *taskHandler) TaskInput(ctx *gin.Context) {
 	})
 }
 
-func (t *taskHandler) TaskCreate(ctx *gin.Context) {
-	var form TaskForm
-	if err := ctx.ShouldBind(&form); err != nil {
-		ctx.HTML(http.StatusOK, "input.tmpl", gin.H{
-			"title": "Task Input",
-			"error": err.Error(),
-		})
-		return
-	}
-	task := model.NewTask(t.db)
-	task.TaskCreate(form.Name, model.TASK_STATUS_TODO_ID)
-
-	ctx.Redirect(http.StatusMovedPermanently, "/task")
-}
-
 func (t *taskHandler) TaskCreateApi(ctx *gin.Context) {
 	var form TaskForm
 	if err := ctx.ShouldBindJSON(&form); err != nil {
@@ -102,7 +89,10 @@ func (t *taskHandler) TaskCreateApi(ctx *gin.Context) {
 		return
 	}
 	task := model.NewTask(t.db)
-	if err := task.TaskCreate(form.Name, model.TASK_STATUS_TODO_ID); err != nil {
+	sid, _ := ctx.Cookie("SESSION_ID")
+	session := model.NewSession(t.redis)
+	userId := session.GetUserId(sid)
+	if err := task.TaskCreate(form.Name, userId, model.TASK_STATUS_TODO_ID); err != nil {
 		fmt.Println(err)
 		ctx.JSON(http.StatusInternalServerError, err.Error())
 		return

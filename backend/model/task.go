@@ -73,11 +73,12 @@ func (t *task) TaskList() []TaskEntity {
 	return taskList
 }
 
-func (t *task) TaskCreate(name string, status int32) error {
+func (t *task) TaskCreate(name string, userId int64, status int32) error {
 	query := entity.New(t.db)
 
 	_, err := query.CreateTask(context.Background(), entity.CreateTaskParams{
 		Name:   name,
+		UserID: userId,
 		Status: status,
 	})
 	return err
