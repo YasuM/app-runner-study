@@ -28,8 +28,8 @@ func TestTaskCreateApi(t *testing.T) {
 	j, _ := json.Marshal(form)
 	ctx.Request = httptest.NewRequest("POST", "/", bytes.NewBuffer(j))
 
-	h := NewTaskHandler(db)
-	h.TaskCreateApi(ctx)
+	h := NewTaskHandler(db, newRedisClient())
+	h.TaskCreate(ctx)
 
 	fmt.Println(w.Code)
 	assert.Equal(t, w.Code, http.StatusOK)
@@ -54,7 +54,7 @@ func TestTaskListApi(t *testing.T) {
 	}
 
 	h := NewTaskHandler(db, newRedisClient())
-	h.TaskListApi(ctx)
+	h.TaskList(ctx)
 
 	var actual []model.TaskEntity
 	json.Unmarshal(w.Body.Bytes(), &actual)
