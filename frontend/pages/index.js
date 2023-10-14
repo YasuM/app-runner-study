@@ -7,7 +7,7 @@ export default function Index() {
   const [taskList, setTaskList] = useState([])
   const router = useRouter()
   async function deleteTask(id) {
-    await fetch(process.env.NEXT_PUBLIC_API_HOST + "/delete/" + id, {
+    await fetch(process.env.NEXT_PUBLIC_API_HOST + "/task/delete/" + id, {
       method: "POST",
     })
     router.push('/')

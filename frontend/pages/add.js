@@ -5,7 +5,7 @@ export default function Input() {
 
   async function submit() {
     const data = {task: document.querySelector("input[name=task]").value}
-    const res = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/create", {
+    const res = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/task/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

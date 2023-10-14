@@ -11,7 +11,7 @@ export default function Edit(params) {
       status: Number(document.querySelector("select[name=status]").value)
     }
     console.log(data)
-    const res = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/edit", {
+    const res = await fetch(process.env.NEXT_PUBLIC_API_HOST + "/task/edit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
